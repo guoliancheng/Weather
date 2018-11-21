@@ -12,7 +12,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        NetworkTools.shared.request(type: urlType.getCityWeather(city: "北京")) { (result, isSuccess) in
+            print(result)
+        }
     }
 
 

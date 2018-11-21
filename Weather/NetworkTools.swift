@@ -7,9 +7,30 @@
 //
 import Alamofire
 import Foundation
+enum urlType {
+//    typealias RawValue = <#type#>
+    case getCityWeather(city:String)
+    
+    func getUrl()->String{
+        switch self {
+        case .getCityWeather(let city):
+            if let urlCode = city.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed){
+                return "?format=2&cityname=\(urlCode)&key=\(AppKey)"
+            }else{
+                return "?format=2&cityname=\(city)&key=\(AppKey)"
+            }
+        }
+    }
+}
+
+
+
 class NetworkTools {
     //v3都用这个 block 返回
+    let baseURL = "http://v.juhe.cn/weather/index"
+    
     typealias requestCallBack = (_ result: [String:Any]?, _ isSuccess: Bool)->()
+    
     static let shared = NetworkTools()
     
     let manager:SessionManager = {
@@ -20,14 +41,23 @@ class NetworkTools {
     }()
     
     
-     func requestV20(method: HTTPMethod, URLString: String,  parameters: [String: Any]?, finished: @escaping requestCallBack) {
+    func request(type:urlType ,parameters: [String: Any] = [:],callBack:@escaping requestCallBack){
+        self.requestV20(method: .get, URLString: type.getUrl(), parameters: parameters, finished: callBack)
+        
+//        Alamofire.request(baseURL+type.getUrl()).responseJSON { (response) in
+//            print(response)
+//        }
+        
+    }
+    
+    private func requestV20(method: HTTPMethod, URLString: String,  parameters: [String: Any], finished: @escaping requestCallBack) {
         
         // 显示网络指示菊花
         DispatchQueue.main.async {
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
         }
         
-        manager.request(URLString, method: method, parameters: parameters, encoding: JSONEncoding.default,headers: [:])
+        manager.request(baseURL+URLString, method: method, parameters: nil, encoding: JSONEncoding.default,headers: nil)
             .responseJSON{ (response) in
                 self.netWorkResponse(response, finished: finished)
         }
@@ -47,8 +77,8 @@ class NetworkTools {
         }
         let result = response.result.value! as! [String:AnyObject]
         
-        let retCode = result["retCode"] as? Int
-        guard (retCode != nil) else {
+        let retCode = result["error_code"] as? Int
+        guard (retCode == 0) else {
             print("服务器数据错误\(response.result.value!)")
             // 完成回调
             finished(nil, false)
@@ -57,13 +87,7 @@ class NetworkTools {
         }
         // 完成回调
         finished(response.value as? [String : Any], true)
-        
-//        if response.result.value != nil {
-//            if code == 4006 || code == 4013{
-//                //token过期需要重新登录
-//                NotificationCenter.default.post(name: Notification.Name(rawValue: LCSwitchRootViewControllerNotification), object: nil)
-//            }
-//        }
     }
     
+
 }
