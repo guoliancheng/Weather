@@ -24,6 +24,28 @@ class MenuViewController: UIViewController {
         tableView.separatorStyle = .none
         return tableView
     }()
+    /// 分享按钮
+    lazy var shareBtn : UIButton = {
+       let b = UIButton()
+        b.setTitle("分享", for: UIControl.State.normal)
+        b.setTitleColor(.black, for: UIControl.State.normal)
+        b.layer.cornerRadius = 8;
+        b.layer.borderWidth = 1;
+        b.layer.borderColor = UIColor.black.cgColor;
+        return b
+    }()
+    /// 关于按钮
+    lazy var aboutBtn : UIButton = {
+        let b = UIButton()
+        b.setTitle("关于", for: UIControl.State.normal)
+        b.setTitleColor(.black, for: UIControl.State.normal)
+        b.layer.cornerRadius = 8;
+        b.layer.borderWidth = 1;
+        b.layer.borderColor = UIColor.black.cgColor;
+        return b
+    }()
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +81,23 @@ extension MenuViewController {
         tableView.rowHeight = myCitiesCellHeight
         
         view.addSubview(tableView)
+        view.addSubview(shareBtn)
+        view.addSubview(aboutBtn)
+        
+        shareBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(self.view).offset(20)
+            make.width.equalTo(menuViewWidth-40)
+            make.height.equalTo(40)
+            make.bottom.equalTo(self.aboutBtn.snp_top).offset(-10)
+        }
+        
+        aboutBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(self.view).offset(20)
+            make.width.equalTo(menuViewWidth-40)
+            make.height.equalTo(40)
+            make.bottom.equalTo(self.view).offset(-50)
+        }
+        
     }
     
     private func setupHeaderView() {

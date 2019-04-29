@@ -10,6 +10,7 @@ import Foundation
 import HandyJSON
 
 /// 天气数据模型
+@objcMembers
 class Weather: NSObject,HandyJSON,NSCoding {
     /// 城市
     var city: String?
@@ -67,10 +68,17 @@ class Weather: NSObject,HandyJSON,NSCoding {
                 let value = aDecoder.decodeObject(forKey: label) else {
                 return
             }
+            print("value:\(value),label:\(label)");
+            
             setValue(value, forKey: label)
         }
     }
     
+    
+    override func value(forUndefinedKey key: String) -> Any? {
+        print("没有找到这个Key:\(key)")
+        return nil
+    }
     /// 根据天气类型返回天气图标
     ///
     /// - Parameters:
@@ -154,6 +162,7 @@ class Aqi: NSObject,HandyJSON,NSCoding {
 }
 
 /// 未来天气预报
+@objcMembers
 class Forecast: NSObject,HandyJSON,NSCoding {
     var date: String?
     var week: String?

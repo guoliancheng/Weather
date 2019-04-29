@@ -11,8 +11,8 @@ import HandyJSON
 
 class NetworkManager {
     
-    private let appCode = "647138002fd44f8abcaefe88afcfb71f"
-    private let host = "http://jisutianqi.market.alicloudapi.com"
+    private let appCode = "xu3Gz97TkNZEn5wdyejHR0cepNjl03wz"//"647138002fd44f8abcaefe88afcfb71f"
+    private let host = "https://api.jisuapi.com"
     private let path = "/weather/query"
     
     /// 创建单例
@@ -31,8 +31,8 @@ class NetworkManager {
     }
     
     private func getWeatherData(cityName: String, isUpdateData: Bool = false) {
-
-        let querys = "?city=\(cityName)"
+        
+        let querys = "?appkey=af7324bceed7f73f&city=\(cityName)"
         let urlStr = host + path + querys
         
         // 带中文的URL创建 必须将编码方式改为utf8 否则 URL为空
@@ -42,7 +42,7 @@ class NetworkManager {
         // 创建请求
         var request = URLRequest(url: url!, cachePolicy: URLRequest.CachePolicy(rawValue: 1)!, timeoutInterval: 5)
         request.httpMethod = "GET"
-        request.addValue("APPCODE \(appCode)", forHTTPHeaderField: "Authorization")
+//        request.addValue("APPCODE \(appCode)", forHTTPHeaderField: "Authorization")
         let requestSession = URLSession(configuration: .default)
         
         // 发起网络请求
